@@ -2,24 +2,18 @@ import 'package:flutter/material.dart';
 
 class Design extends StatefulWidget {
   final Color color;
-  final double blurLavel;
-  final Offset offsetWhite;
-  final Offset offsetBlack;
-  final double height;
-  final double width;
+  final dynamic item;
   final IconData icon;
   final double iconSize;
+  final Function buttonPressed;
 
   const Design({
     Key key,
     this.color,
-    this.blurLavel,
-    this.offsetWhite,
-    this.offsetBlack,
-    this.height,
-    this.width,
+    this.item,
     this.icon,
     this.iconSize,
+    this.buttonPressed,
   }) : super(key: key);
 
   @override
@@ -33,9 +27,11 @@ class _DesignState extends State<Design> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerDown: (event) {
+        print('EVENT: $event');
         setState(() {
           isPressed = true;
         });
+        widget.buttonPressed(widget.item);
         return true;
       },
       onPointerUp: (event) {
@@ -45,84 +41,71 @@ class _DesignState extends State<Design> {
         return true;
       },
       child: isPressed
-          ? Container(
-              height: widget.height,
-              width: widget.width,
-              decoration: BoxDecoration(
-                color: widget.color,
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: widget.blurLavel,
-                    offset: Offset(-3, -3),
-                    color: Colors.white.withOpacity(.7),
-                  ),
-                  BoxShadow(
-                    blurRadius: widget.blurLavel,
-                    offset: Offset(3, 3),
-                    color: Colors.white.withOpacity(.15),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: widget.color,
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: widget.color,
-                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: widget.blurLavel,
-                            offset: widget.offsetWhite,
-                            color: Colors.white.withOpacity(.7),
-                          ),
-                          BoxShadow(
-                            blurRadius: widget.blurLavel,
-                            offset: widget.offsetBlack,
-                            color: Colors.black.withOpacity(.25),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        widget.icon,
-                        size: widget.iconSize,
-                        color: Colors.blue,
-                      ),
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 50.0,
+                width: 50.0,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: widget.color ?? Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 5.0,
+                      offset: Offset(5, 5),
+                      color: Colors.white.withOpacity(.7),
                     ),
+                    BoxShadow(
+                      blurRadius: 3.0,
+                      offset: Offset(-5, -5),
+                      color: Colors.white.withOpacity(.15),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  widget.item.toString(),
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
               ),
             )
-          : Container(
-              height: widget.height,
-              width: widget.width,
-              decoration: BoxDecoration(
-                color: Color(0xFFE6EBF2),
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: widget.blurLavel,
-                    offset: Offset(-3, -3),
-                    color: Colors.white.withOpacity(.7),
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 50.0,
+                width: 50.0,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: widget.color ?? Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 5.0,
+                      offset: Offset(-5, -5),
+                      color: Colors.white.withOpacity(.3),
+                    ),
+                    BoxShadow(
+                      blurRadius: 3.0,
+                      offset: Offset(5, 5),
+                      color: widget.color != null
+                          ? widget.color.withOpacity(.10)
+                          : Colors.black.withOpacity(.15),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  widget.item.toString(),
+                  style: TextStyle(
+                    color:
+                        widget.color != null ? Colors.white : Colors.blueGrey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
-                  BoxShadow(
-                    blurRadius: widget.blurLavel,
-                    offset: Offset(3, 3),
-                    color: Colors.black.withOpacity(.3),
-                  ),
-                ],
-              ),
-              child: Icon(
-                widget.icon,
-                size: 30.0,
-                color: Colors.black.withOpacity(.5),
+                ),
               ),
             ),
     );
