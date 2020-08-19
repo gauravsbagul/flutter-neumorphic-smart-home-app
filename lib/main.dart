@@ -37,42 +37,86 @@ class _MySmartomeState extends State<MySmartome> {
   String inputBoxString = '';
   double result;
 
-  void buttonPressed(dynamic value) {
-    print('buttonPressed: ${value.runtimeType}');
+  double _split(dynamic value, dynamic prevInputBoxString, int index) {
+    return double.parse(prevInputBoxString.split(value)[index]);
+  }
 
-    // setState(() {
-    //   inputBoxString = inputBoxString + value.toString();
-    // });
+  void _calculate(dynamic prevInputBoxString) {
+    if (inputBoxString.contains('+')) {
+      if (result == null) {
+        result = _split('+', prevInputBoxString, 0) +
+            _split('+', prevInputBoxString, 1);
+      } else {
+        result = result + _split('+', prevInputBoxString, 0);
+      }
+    } else if (prevInputBoxString.contains('-')) {
+      if (result == null) {
+        result = _split('-', prevInputBoxString, 0) -
+            _split('-', prevInputBoxString, 1);
+      } else {
+        result = result - _split('-', prevInputBoxString, 0);
+      }
+    } else if (prevInputBoxString.contains('X')) {
+      if (result == null) {
+        result = _split('X', prevInputBoxString, 0) *
+            _split('X', prevInputBoxString, 1);
+      } else {
+        result = result * _split('X', prevInputBoxString, 0);
+      }
+    } else if (prevInputBoxString.contains('/')) {
+      if (result == null) {
+        result = _split('/', prevInputBoxString, 0) /
+            _split('/', prevInputBoxString, 1);
+      } else {
+        result = result / _split('/', prevInputBoxString, 0);
+      }
+    }
+  }
+
+  void _setString(dynamic value) {
+    setState(() {
+      inputBoxString = inputBoxString + value.toString();
+    });
+  }
+
+  void buttonPressed(dynamic value) {
     switch (value) {
-      // case '+':
-      //   result = result + value.toDouble();
-      //   break;
-      // case '-':
-      //   result = result - value.toDouble();
-      //   break;
-      // case 'X':
-      //   result = result * value.toDouble();
-      //   break;
-      // case '/':
-      //   result = result / value.toDouble();
-      //   break;
-      // case '=':
-      //   break;
+      case '+':
+        _calculate(inputBoxString);
+        _setString(value);
+        break;
+      case '-':
+        _calculate(inputBoxString);
+        _setString(value);
+        break;
+      case 'X':
+        _calculate(inputBoxString);
+        _setString(value);
+        break;
+      case '/':
+        _calculate(inputBoxString);
+        _setString(value);
+        break;
+      case '=':
+        _calculate(inputBoxString);
+        setState(() {
+          inputBoxString = result.toString();
+          result = null;
+        });
+        break;
       case 'C':
         setState(() {
           inputBoxString = '';
+          result = null;
         });
         break;
       default:
-        setState(() {
-          inputBoxString = inputBoxString + value.toString();
-        });
+        _setString(value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('VALinputBoxStringUE: $inputBoxString');
     return Scaffold(
       appBar: AppBar(
         title: Text(

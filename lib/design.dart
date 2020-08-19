@@ -27,7 +27,6 @@ class _DesignState extends State<Design> {
   Widget build(BuildContext context) {
     return Listener(
       onPointerDown: (event) {
-        print('EVENT: $event');
         setState(() {
           isPressed = true;
         });
